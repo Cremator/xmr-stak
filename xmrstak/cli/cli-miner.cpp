@@ -110,6 +110,8 @@ void help()
 	cout<< "Supported coin opitons: " << endl << algos << endl; 
 	cout<< "Version: " << get_version_str_short() << endl;
 	cout<<"Brought to by fireice_uk and psychocrypt under GPLv3."<<endl;
+	cout<<"Ported to ppc64le by nioroso-x3"<<endl;
+
 }
 
 bool read_yes_no(const char* str)
@@ -708,6 +710,8 @@ int main(int argc, char *argv[])
 	printer::inst()->print_str("\n\n");
 	printer::inst()->print_str("Brought to you by fireice_uk and psychocrypt under GPLv3.\n");
 	printer::inst()->print_str("Based on CPU mining code by wolf9466 (heavily optimized by fireice_uk).\n");
+	printer::inst()->print_str("Ported to ppc64le by nioroso-x3\n");
+
 #ifndef CONF_NO_CUDA
 	printer::inst()->print_str("Based on NVIDIA mining code by KlausT and psychocrypt.\n");
 #endif

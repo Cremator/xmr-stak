@@ -25,8 +25,8 @@ list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
 # If you remove this guard to compile with older gcc versions the miner will produce
 # a high rate of wrong shares.
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.1)
-        message(FATAL_ERROR "g++ version must be at least 5.1!")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.3)
+        message(FATAL_ERROR "g++ version must be at least 6.3!")
     endif()
 endif()
 
@@ -40,8 +40,8 @@ set(XMR-STAK_COMPILE "native" CACHE STRING "select CPU compute architecture")
 set_property(CACHE XMR-STAK_COMPILE PROPERTY STRINGS "native;generic")
 if(XMR-STAK_COMPILE STREQUAL "native")
     if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-        set(CMAKE_CXX_FLAGS "-march=native -mtune=native ${CMAKE_CXX_FLAGS}")
-        set(CMAKE_C_FLAGS "-march=native -mtune=native ${CMAKE_C_FLAGS}")
+        set(CMAKE_CXX_FLAGS "-mcpu=native -mtune=native ${CMAKE_CXX_FLAGS}")
+        set(CMAKE_C_FLAGS "-mcpu=native -mtune=native ${CMAKE_C_FLAGS}")
     endif()
 elseif(XMR-STAK_COMPILE STREQUAL "generic")
     add_definitions("-DCONF_ENFORCE_OpenCL_1_2=1")
@@ -58,7 +58,7 @@ option(CMAKE_LINK_STATIC "link as much as possible libraries static" OFF)
 #option(CUDA_USE_STATIC_CUDA_RUNTIME "Use the static version of the CUDA runtime library if available" OFF)
 #set(CUDA_USE_STATIC_CUDA_RUNTIME OFF CACHE BOOL "Use the static version of the CUDA runtime library if available" FORCE)
 
-option(CUDA_ENABLE "Enable or disable CUDA support (NVIDIA backend)" ON)
+option(CUDA_ENABLE "Enable or disable CUDA support (NVIDIA backend)" OFF)
 if(CUDA_ENABLE)
     find_package(CUDA 7.5)
 
@@ -207,7 +207,7 @@ list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
 # Find OpenCL
 ###############################################################################
 
-option(OpenCL_ENABLE "Enable or disable OpenCL spport (AMD GPU support)" ON)
+option(OpenCL_ENABLE "Enable or disable OpenCL spport (AMD GPU support)" OFF)
 if(OpenCL_ENABLE)
     # try to find AMD OpenCL before NVIDIA OpenCL
     find_path(OpenCL_INCLUDE_DIR
@@ -418,9 +418,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # disable min define to allow usage of std::min
     add_definitions(-DNOMINMAX)
 else()
-    # activate sse2 and aes-ni
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -maes")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -maes")
+    # activate altivec
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -mcpu=native -mtune=native -m64 -mdirect-move -mcrypto -mpower8-vector -flax-vector-conversions")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -mcpu=native -mtune=native -m64 -mdirect-move -mcrypto -mpower8-vector -flax-vector-conversions")
 
 endif()
 

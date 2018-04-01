@@ -7,8 +7,8 @@ R"===(
  *                  the maximum performance. When set to a number N greater than 1, this mode will increase the
  *                  cache usage and single thread performance by N times.
  *
- * no_prefetch -    Some sytems can gain up to extra 5% here, but sometimes it will have no difference or make
- *                  things slower.
+ * be_mode -        Power8 likes BE, Power9 does not.
+ *                  
  *
  * affine_to_cpu -  This can be either false (no affinity), or the CPU core number. Note that on hyperthreading 
  *                  systems it is better to assign threads to physical cores. On Windows this usually means selecting 
@@ -21,8 +21,8 @@ R"===(
  * A filled out configuration should look like this:
  * "cpu_threads_conf" :
  * [ 
- *      { "low_power_mode" : false, "no_prefetch" : true, "affine_to_cpu" : 0 },
- *      { "low_power_mode" : false, "no_prefetch" : true, "affine_to_cpu" : 1 },
+ *      { "low_power_mode" : false, "be_mode" : true, "affine_to_cpu" : 0 },
+ *      { "low_power_mode" : false, "be_mode" : true, "affine_to_cpu" : 1 },
  * ],
  * If you do not wish to mine with your CPU(s) then use:
  * "cpu_threads_conf" :

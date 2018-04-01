@@ -21,11 +21,6 @@ To benchmark the miner speed there are two ways.
   - Mine against a pool end press the key `h` after 30 sec to see the hash report.
   - Start the miner with the cli option `--benchmark BLOCKVERSION`. The miner will not connect to any pool and performs a 60sec performance benchmark with all enabled back-ends.
 
-## Windows
-"Run As Administrator" prompt (UAC) confirmation is needed to use large pages on Windows 7.
-On Windows 10 it is only needed once to set up the account to use them.
-Disable the dialog with the command line option `--noUAC`
-
 ## NVIDIA Backend
 
 By default the NVIDIA backend can be tuned in the config file `nvidia.txt`

@@ -30,13 +30,6 @@
 #include <stdlib.h>
 #include <string>
 
-#ifdef _WIN32
-#define strcasecmp _stricmp
-#include <intrin.h>
-#else
-#include <cpuid.h>
-#endif
-
 
 namespace xmrstak
 {
@@ -110,7 +103,7 @@ bool jconf::GetThreadConfig(size_t id, thd_cfg &cfg)
 
 	const Value *mode, *no_prefetch, *aff;
 	mode = GetObjectMember(oThdConf, "low_power_mode");
-	no_prefetch = GetObjectMember(oThdConf, "no_prefetch");
+	no_prefetch = GetObjectMember(oThdConf, "be_mode");
 	aff = GetObjectMember(oThdConf, "affine_to_cpu");
 
 	if(mode == nullptr || no_prefetch == nullptr || aff == nullptr)

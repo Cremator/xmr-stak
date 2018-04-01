@@ -21,7 +21,7 @@
   *
   */
 
-#include "crypto/cryptonight_aesni.h"
+#include "crypto/cryptonight_altivec.h"
 
 #include "xmrstak/misc/console.hpp"
 #include "xmrstak/backend/iBackend.hpp"
@@ -319,13 +319,9 @@ std::vector<iBackend*> minethd::thread_starter(uint32_t threadOffset, miner_work
 	for (i = 0; i < n; i++)
 	{
 		jconf::inst()->GetThreadConfig(i, cfg);
-
+    
 		if(cfg.iCpuAff >= 0)
 		{
-#if defined(__APPLE__)
-			printer::inst()->print_msg(L1, "WARNING on macOS thread affinity is only advisory.");
-#endif
-
 			printer::inst()->print_msg(L1, "Starting %dx thread, affinity: %d.", cfg.iMultiway, (int)cfg.iCpuAff);
 		}
 		else
@@ -392,7 +388,7 @@ minethd::cn_hash_fun minethd::func_selector(bool bHaveAes, bool bNoPrefetch, xmr
 
 	std::bitset<2> digit;
 	digit.set(0, !bHaveAes);
-	digit.set(1, !bNoPrefetch);
+	digit.set(1, bNoPrefetch);
 
 	return func_table[ algv << 2 | digit.to_ulong() ];
 }
