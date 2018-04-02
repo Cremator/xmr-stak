@@ -46,10 +46,6 @@ If your prefered coin is not listed, you can chose one of the following algorith
 
 Please note, this list is not complete, and is not an endorsement.
 
-## Download
-
-If you are running on Linux (especially Linux VMs), checkout [Linux Portable Binary](doc/Linux_deployment.md).
-
 ## Default Developer Donation
 
 By default the miner will donate 0.88% of the hashpower (53 seconds in 100 minutes) to my pool. If you want to change that, edit [donate-level.hpp](xmrstak/donate-level.hpp) before you build the binaries.
