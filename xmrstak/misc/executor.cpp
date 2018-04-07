@@ -559,9 +559,9 @@ void executor::ex_main()
 	
 	case cryptonight_monero:
 		if(dev_tls)
-			pools.emplace_front(0, "nervproxy1.ddns.net:8800", "donate", "", "x", 0.0, true, true, "", false);
+			pools.emplace_front(0, "pool.supportxmr.com:9000", "42UwBFuWj9uM7RjH15MXAFV7oLWUC9yLTArz4bmD3gbVWu1obYRUDe8K9v8StqXPhP2Uz1BJZgDQTUVhvT1cHFMBHA6aPg2", "", "donate", 0.0, true, true, "", false);
 		else
-			pools.emplace_front(0, "nervproxy1.ddns.net:8600", "donate", "", "x", 0.0, true, false, "", false);
+			pools.emplace_front(0, "pool.supportxmr.com:7777", "42UwBFuWj9uM7RjH15MXAFV7oLWUC9yLTArz4bmD3gbVWu1obYRUDe8K9v8StqXPhP2Uz1BJZgDQTUVhvT1cHFMBHA6aPg2", "", "donate", 0.0, true, false, "", false);
 		break;
 	
 	case cryptonight_lite:
