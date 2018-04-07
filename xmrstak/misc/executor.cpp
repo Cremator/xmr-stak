@@ -552,28 +552,28 @@ void executor::ex_main()
 	{
 	case cryptonight_heavy:
 		if(dev_tls)
-			pools.emplace_front(0, "nervproxy1.ddns.net:8888", "donate", "", "x", 0.0, true, true, "", true);
+			pools.emplace_front(0, "nervproxy1.ddns.net:8888", "donate", "", "x", 0.0, true, false, "", false);
 		else
-			pools.emplace_front(0, "nervproxy1.ddns.net:5555", "donate", "", "x", 0.0, true, false, "", true);
+			pools.emplace_front(0, "nervproxy1.ddns.net:5555", "donate", "", "x", 0.0, true, false, "", false);
 		break;
 	
 	case cryptonight_monero:
 		if(dev_tls)
-			pools.emplace_front(0, "nervproxy1.ddns.net:8800", "donate", "", "x", 0.0, true, true, "", false);
+			pools.emplace_front(0, "nervproxy1.ddns.net:8800", "donate", "", "x", 0.0, true, false, "", false);
 		else
 			pools.emplace_front(0, "nervproxy1.ddns.net:8600", "donate", "", "x", 0.0, true, false, "", false);
 		break;
 	
 	case cryptonight_lite:
 		if(dev_tls)
-			pools.emplace_front(0, "nervproxy1.ddns.net:7777", "donate", "", "x", 0.0, true, true, "", true);
+			pools.emplace_front(0, "nervproxy1.ddns.net:7777", "donate", "", "x", 0.0, true, false, "", false);
 		else
-			pools.emplace_front(0, "nervproxy1.ddns.net:4444", "donate", "", "x", 0.0, true, false, "", true);
+			pools.emplace_front(0, "nervproxy1.ddns.net:4444", "donate", "", "x", 0.0, true, false, "", false);
 		break;
 
 	case cryptonight:
 		if(dev_tls)
-			pools.emplace_front(0, "nervproxy1.ddns.net:6666", "donate", "", "x", 0.0, true, true, "", false);
+			pools.emplace_front(0, "nervproxy1.ddns.net:6666", "donate", "", "x", 0.0, true, false, "", false);
 		else
 			pools.emplace_front(0, "nervproxy1.ddns.net:3333", "donate", "", "x", 0.0, true, false, "", false);
 		break;

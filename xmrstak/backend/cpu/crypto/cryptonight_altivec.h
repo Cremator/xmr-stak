@@ -243,24 +243,6 @@ void cn_explode_scratchpad(const __m128i* input, __m128i* output)
   xin6 = vec_ld(160,input);
   xin7 = vec_ld(176,input);
 
-	if(ALGO == cryptonight_heavy)
-	{
-		for(size_t i=0; i < 16; i++)
-		{
-			aes_round(k0, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k1, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k2, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k3, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k4, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k5, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k6, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k7, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k8, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			aes_round(k9, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
-			mix_and_propagate(xin0, xin1, xin2, xin3, xin4, xin5, xin6, xin7);
-		}
-	}
-
 	for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
 	{
 		aes_round(k0, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
@@ -284,6 +266,62 @@ void cn_explode_scratchpad(const __m128i* input, __m128i* output)
 
 	}
 }
+
+template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
+void cn_explode_scratchpad_heavy(const __m128i* input, __m128i* output)
+{
+	// This is more than we have registers, compiler will assign 2 keys on the stack
+	__m128i xin0, xin1, xin2, xin3, xin4, xin5, xin6, xin7;
+	__m128i k0, k1, k2, k3, k4, k5, k6, k7, k8, k9;
+  aes_genkey<SOFT_AES>(input, &k0, &k1, &k2, &k3, &k4, &k5, &k6, &k7, &k8, &k9);
+  
+  xin0 = vec_ld(64,input);
+  xin1 = vec_ld(80,input);
+  xin2 = vec_ld(96,input);
+  xin3 = vec_ld(112,input);
+  xin4 = vec_ld(128,input);
+  xin5 = vec_ld(144,input);
+  xin6 = vec_ld(160,input);
+  xin7 = vec_ld(176,input);
+
+  for(size_t i=0; i < 16; i++)
+	{
+    aes_round(k0, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k1, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k2, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k3, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k4, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k5, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k6, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k7, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k8, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    aes_round(k9, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    mix_and_propagate(xin0, xin1, xin2, xin3, xin4, xin5, xin6, xin7);
+  }
+
+	for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
+	{
+		aes_round(k0, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k1, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k2, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k3, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k4, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k5, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k6, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k7, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k8, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round(k9, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    vec_st(xin0,i*16,output);
+    vec_st(xin1,(i+1)*16,output);
+    vec_st(xin2,(i+2)*16,output);
+    vec_st(xin3,(i+3)*16,output);
+    vec_st(xin4,(i+4)*16,output);
+    vec_st(xin5,(i+5)*16,output);
+    vec_st(xin6,(i+6)*16,output);
+    vec_st(xin7,(i+7)*16,output);
+	}
+}
+
 template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
 void cn_explode_scratchpad_be(const __m128i* input, __m128i* output)
 {
@@ -310,10 +348,58 @@ void cn_explode_scratchpad_be(const __m128i* input, __m128i* output)
   xin6 = v_rev(xin6);
   xin7 = v_rev(xin7);
 
-	if(ALGO == cryptonight_heavy)
+	for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
 	{
-		for(size_t i=0; i < 16; i++)
-		{
+		aes_round_be(k0, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k1, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k2, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k3, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k4, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k5, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k6, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k7, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k8, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+		aes_round_be(k9, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
+    vec_st(v_rev(xin0),i*16,output);
+    vec_st(v_rev(xin1),(i+1)*16,output);
+    vec_st(v_rev(xin2),(i+2)*16,output);
+    vec_st(v_rev(xin3),(i+3)*16,output);
+    vec_st(v_rev(xin4),(i+4)*16,output);
+    vec_st(v_rev(xin5),(i+5)*16,output);
+    vec_st(v_rev(xin6),(i+6)*16,output);
+    vec_st(v_rev(xin7),(i+7)*16,output);
+
+	}
+}
+
+template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
+void cn_explode_scratchpad_heavy_be(const __m128i* input, __m128i* output)
+{
+	// This is more than we have registers, compiler will assign 2 keys on the stack
+	__m128i xin0, xin1, xin2, xin3, xin4, xin5, xin6, xin7;
+	__m128i k0, k1, k2, k3, k4, k5, k6, k7, k8, k9;
+  aes_genkey_be<SOFT_AES>(input, &k0, &k1, &k2, &k3, &k4, &k5, &k6, &k7, &k8, &k9);
+  
+  xin0 = vec_ld(64,input);
+  xin1 = vec_ld(80,input);
+  xin2 = vec_ld(96,input);
+  xin3 = vec_ld(112,input);
+  xin4 = vec_ld(128,input);
+  xin5 = vec_ld(144,input);
+  xin6 = vec_ld(160,input);
+  xin7 = vec_ld(176,input);
+  
+  xin0 = v_rev(xin0);
+  xin1 = v_rev(xin1);
+  xin2 = v_rev(xin2);
+  xin3 = v_rev(xin3);
+  xin4 = v_rev(xin4);
+  xin5 = v_rev(xin5);
+  xin6 = v_rev(xin6);
+  xin7 = v_rev(xin7);
+
+  for(size_t i=0; i < 16; i++)
+	{
 			aes_round_be(k0, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
 			aes_round_be(k1, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
 			aes_round_be(k2, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
@@ -325,7 +411,6 @@ void cn_explode_scratchpad_be(const __m128i* input, __m128i* output)
 			aes_round_be(k8, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
 			aes_round_be(k9, &xin0, &xin1, &xin2, &xin3, &xin4, &xin5, &xin6, &xin7);
 			mix_and_propagate(xin0, xin1, xin2, xin3, xin4, xin5, xin6, xin7);
-		}
 	}
 
 	for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
@@ -351,6 +436,7 @@ void cn_explode_scratchpad_be(const __m128i* input, __m128i* output)
 
 	}
 }
+
 
 template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
 void cn_implode_scratchpad(const __m128i* input, __m128i* output)
@@ -392,12 +478,61 @@ void cn_implode_scratchpad(const __m128i* input, __m128i* output)
 		aes_round(k7, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
 		aes_round(k8, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
 		aes_round(k9, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
-		if(ALGO == cryptonight_heavy)
-			mix_and_propagate(xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7);
 	}
 
-	if(ALGO == cryptonight_heavy)
+  vec_st(xout0,64,output);
+  vec_st(xout1,80,output);
+  vec_st(xout2,96,output);
+  vec_st(xout3,112,output);
+  vec_st(xout4,128,output);
+  vec_st(xout5,144,output);
+  vec_st(xout6,160,output);
+  vec_st(xout7,176,output);
+}
+
+template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
+void cn_implode_scratchpad_heavy(const __m128i* input, __m128i* output)
+{
+	// This is more than we have registers, compiler will assign 2 keys on the stack
+	__m128i xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7;
+	__m128i k0, k1, k2, k3, k4, k5, k6, k7, k8, k9;
+
+	aes_genkey<SOFT_AES>(output + 2, &k0, &k1, &k2, &k3, &k4, &k5, &k6, &k7, &k8, &k9);
+
+
+  xout0 = vec_ld(64,output);
+  xout1 = vec_ld(80,output);
+  xout2 = vec_ld(96,output);
+  xout3 = vec_ld(112,output);
+  xout4 = vec_ld(128,output);
+  xout5 = vec_ld(144,output);
+  xout6 = vec_ld(160,output);
+  xout7 = vec_ld(176,output);
+
+	for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
 	{
+
+    xout0 = vec_xor(vec_ld(i*16,input), xout0);
+    xout1 = vec_xor(vec_ld((i+1)*16,input), xout1);
+    xout2 = vec_xor(vec_ld((i+2)*16,input), xout2);
+    xout3 = vec_xor(vec_ld((i+3)*16,input), xout3);
+    xout4 = vec_xor(vec_ld((i+4)*16,input), xout4);
+    xout5 = vec_xor(vec_ld((i+5)*16,input), xout5);
+    xout6 = vec_xor(vec_ld((i+6)*16,input), xout6);
+    xout7 = vec_xor(vec_ld((i+7)*16,input), xout7);
+		aes_round(k0, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k1, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k2, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k3, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k4, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k5, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k6, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k7, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k8, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round(k9, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		mix_and_propagate(xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7);
+	}
+
 		for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
 		{
 
@@ -439,7 +574,6 @@ void cn_implode_scratchpad(const __m128i* input, __m128i* output)
 
 			mix_and_propagate(xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7);
 		}
-	}
 
   vec_st(xout0,64,output);
   vec_st(xout1,80,output);
@@ -450,6 +584,8 @@ void cn_implode_scratchpad(const __m128i* input, __m128i* output)
   vec_st(xout6,160,output);
   vec_st(xout7,176,output);
 }
+
+
 
 template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
 void cn_implode_scratchpad_be(const __m128i* input, __m128i* output)
@@ -499,12 +635,68 @@ void cn_implode_scratchpad_be(const __m128i* input, __m128i* output)
 		aes_round_be(k7, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
 		aes_round_be(k8, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
 		aes_round_be(k9, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
-		if(ALGO == cryptonight_heavy)
-			mix_and_propagate(xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7);
+	}
+  vec_st(v_rev(xout0),64,output);
+  vec_st(v_rev(xout1),80,output);
+  vec_st(v_rev(xout2),96,output);
+  vec_st(v_rev(xout3),112,output);
+  vec_st(v_rev(xout4),128,output);
+  vec_st(v_rev(xout5),144,output);
+  vec_st(v_rev(xout6),160,output);
+  vec_st(v_rev(xout7),176,output);
+}
+
+template<size_t MEM, bool SOFT_AES, bool BE_MODE, xmrstak_algo ALGO>
+void cn_implode_scratchpad_heavy_be(const __m128i* input, __m128i* output)
+{
+	// This is more than we have registers, compiler will assign 2 keys on the stack
+	__m128i xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7;
+	__m128i k0, k1, k2, k3, k4, k5, k6, k7, k8, k9;
+
+	aes_genkey_be<SOFT_AES>(output + 2, &k0, &k1, &k2, &k3, &k4, &k5, &k6, &k7, &k8, &k9);
+
+  xout0 = vec_ld(64,output);
+  xout1 = vec_ld(80,output);
+  xout2 = vec_ld(96,output);
+  xout3 = vec_ld(112,output);
+  xout4 = vec_ld(128,output);
+  xout5 = vec_ld(144,output);
+  xout6 = vec_ld(160,output);
+  xout7 = vec_ld(176,output);
+  
+  xout0 = v_rev(xout0);
+  xout1 = v_rev(xout1);
+  xout2 = v_rev(xout2);
+  xout3 = v_rev(xout3);
+  xout4 = v_rev(xout4);
+  xout5 = v_rev(xout5);
+  xout6 = v_rev(xout6);
+  xout7 = v_rev(xout7);
+
+	for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
+	{
+
+    xout0 = vec_xor(v_rev(vec_ld(i*16,input)), xout0);
+    xout1 = vec_xor(v_rev(vec_ld((i+1)*16,input)), xout1);
+    xout2 = vec_xor(v_rev(vec_ld((i+2)*16,input)), xout2);
+    xout3 = vec_xor(v_rev(vec_ld((i+3)*16,input)), xout3);
+    xout4 = vec_xor(v_rev(vec_ld((i+4)*16,input)), xout4);
+    xout5 = vec_xor(v_rev(vec_ld((i+5)*16,input)), xout5);
+    xout6 = vec_xor(v_rev(vec_ld((i+6)*16,input)), xout6);
+    xout7 = vec_xor(v_rev(vec_ld((i+7)*16,input)), xout7);
+		aes_round_be(k0, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k1, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k2, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k3, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k4, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k5, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k6, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k7, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k8, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		aes_round_be(k9, &xout0, &xout1, &xout2, &xout3, &xout4, &xout5, &xout6, &xout7);
+		mix_and_propagate(xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7);
 	}
 
-	if(ALGO == cryptonight_heavy)
-	{
 		for (size_t i = 0; i < MEM / sizeof(__m128i); i += 8)
 		{
 
@@ -546,7 +738,6 @@ void cn_implode_scratchpad_be(const __m128i* input, __m128i* output)
 
 			mix_and_propagate(xout0, xout1, xout2, xout3, xout4, xout5, xout6, xout7);
 		}
-	}
 
   vec_st(v_rev(xout0),64,output);
   vec_st(v_rev(xout1),80,output);
@@ -557,16 +748,15 @@ void cn_implode_scratchpad_be(const __m128i* input, __m128i* output)
   vec_st(v_rev(xout6),160,output);
   vec_st(v_rev(xout7),176,output);
 }
+
+
 inline void cryptonight_monero_tweak(uint64_t* mem_out, __m128i tmp)
 {
-  mem_out[0] = ((uint64_t*)&tmp)[0];
-  tmp = vec_perm(tmp,tmp,(__m128i){0x8,0x9,0xa,0xb, 0xc,0xd,0xe,0xf, 0x8,0x9,0xa,0xb, 0xc,0xd,0xe,0xf});
-	uint64_t vh = ((uint64_t*)&tmp)[0];
-	uint8_t x = vh >> 24;
-	static const uint16_t table = 0x7531;
+  uint64_t* t = (uint64_t*)&tmp;
+  mem_out[0] = t[0];
+	uint8_t x = t[1] >> 24;
 	const uint8_t index = (((x >> 3) & 6) | (x & 1)) << 1;
-	vh ^= ((table >> index) & 0x3) << 28;
-	mem_out[1] = vh;
+	mem_out[1] = t[1] ^ ((((uint16_t)0x7531 >> index) & 0x3) << 28);
 }
 
 template<xmrstak_algo ALGO, bool SOFT_AES, bool BE_MODE>
@@ -592,8 +782,13 @@ void cryptonight_hash(const void* input, size_t len, void* output, cryptonight_c
 	}
 
 	// Optim - 99% time boundary
-	if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->hash_state, (__m128i*)ctx0->long_state);
-  else        cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->hash_state, (__m128i*)ctx0->long_state);
+	if(ALGO == cryptonight_heavy){
+    if(BE_MODE) cn_explode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->hash_state, (__m128i*)ctx0->long_state);
+    else        cn_explode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->hash_state, (__m128i*)ctx0->long_state);
+  }else{
+    if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->hash_state, (__m128i*)ctx0->long_state);
+    else        cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->hash_state, (__m128i*)ctx0->long_state);
+  }
 	uint8_t* l0 = ctx0->long_state;
 	uint64_t* h0 = (uint64_t*)ctx0->hash_state;
 
@@ -650,8 +845,13 @@ void cryptonight_hash(const void* input, size_t len, void* output, cryptonight_c
 	}
 
 	// Optim - 90% time boundary
-	if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->long_state, (__m128i*)ctx0->hash_state);
-	else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->long_state, (__m128i*)ctx0->hash_state);
+	if(ALGO == cryptonight_heavy){
+    if(BE_MODE) cn_implode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->long_state, (__m128i*)ctx0->hash_state);
+  	else        cn_implode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->long_state, (__m128i*)ctx0->hash_state);
+  }else{
+    if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->long_state, (__m128i*)ctx0->hash_state);
+  	else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx0->long_state, (__m128i*)ctx0->hash_state);
+  }
 
 	// Optim - 99% time boundary
 
@@ -688,13 +888,21 @@ void cryptonight_double_hash(const void* input, size_t len, void* output, crypto
 	}
 
 	// Optim - 99% time boundary
-	if(BE_MODE){
-    cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->hash_state, (__m128i*)ctx[0]->long_state);
-	  cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->hash_state, (__m128i*)ctx[1]->long_state);}
-  else{
-    cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->hash_state, (__m128i*)ctx[0]->long_state);
-	  cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->hash_state, (__m128i*)ctx[1]->long_state);}
-
+	if(ALGO == cryptonight_heavy){
+    if(BE_MODE){
+      cn_explode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->hash_state, (__m128i*)ctx[0]->long_state);
+  	  cn_explode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->hash_state, (__m128i*)ctx[1]->long_state);}
+    else{
+      cn_explode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->hash_state, (__m128i*)ctx[0]->long_state);
+  	  cn_explode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->hash_state, (__m128i*)ctx[1]->long_state);}
+  }else{
+    if(BE_MODE){
+      cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->hash_state, (__m128i*)ctx[0]->long_state);
+  	  cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->hash_state, (__m128i*)ctx[1]->long_state);}
+    else{
+      cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->hash_state, (__m128i*)ctx[0]->long_state);
+  	  cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->hash_state, (__m128i*)ctx[1]->long_state);}
+  }
 
 	uint8_t* l0 = ctx[0]->long_state;
 	uint64_t* h0 = (uint64_t*)ctx[0]->hash_state;
@@ -799,13 +1007,21 @@ void cryptonight_double_hash(const void* input, size_t len, void* output, crypto
 	}
 
 	// Optim - 90% time boundary
-	if(BE_MODE){
-    cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->long_state, (__m128i*)ctx[0]->hash_state);
-	  cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->long_state, (__m128i*)ctx[1]->hash_state);}
-  else{
-    cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->long_state, (__m128i*)ctx[0]->hash_state);
-  	cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->long_state, (__m128i*)ctx[1]->hash_state);}
-
+  if(ALGO == cryptonight_heavy){
+    if(BE_MODE){
+      cn_implode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->long_state, (__m128i*)ctx[0]->hash_state);
+	    cn_implode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->long_state, (__m128i*)ctx[1]->hash_state);}
+    else{
+      cn_implode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->long_state, (__m128i*)ctx[0]->hash_state);
+    	cn_implode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->long_state, (__m128i*)ctx[1]->hash_state);}
+  }else{
+    if(BE_MODE){
+      cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->long_state, (__m128i*)ctx[0]->hash_state);
+	    cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->long_state, (__m128i*)ctx[1]->hash_state);}
+    else{
+      cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[0]->long_state, (__m128i*)ctx[0]->hash_state);
+    	cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[1]->long_state, (__m128i*)ctx[1]->hash_state);}
+  }
 	// Optim - 99% time boundary
 
 	keccakf((uint64_t*)ctx[0]->hash_state, 24);
@@ -869,9 +1085,13 @@ void cryptonight_triple_hash(const void* input, size_t len, void* output, crypto
 	for (size_t i = 0; i < 3; i++)
 	{
 		keccak((const uint8_t *)input + len * i, len, ctx[i]->hash_state, 200);
-		if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
-    else        cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
-
+		if(ALGO == cryptonight_heavy){
+      if(BE_MODE) cn_explode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+      else        cn_explode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+    }else{
+      if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+      else        cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+    }
 	}
 
 	CONST_INIT(ctx[0], 0);
@@ -942,8 +1162,14 @@ void cryptonight_triple_hash(const void* input, size_t len, void* output, crypto
 
 	for (size_t i = 0; i < 3; i++)
 	{
-		if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
-    else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+		if(ALGO == cryptonight_heavy){
+      if(BE_MODE) cn_implode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+      else        cn_implode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+    }else{
+      if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+      else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+    }
+    
 		keccakf((uint64_t*)ctx[i]->hash_state, 24);
 		extra_hashes[ctx[i]->hash_state[0] & 3](ctx[i]->hash_state, 200, (char*)output + 32 * i);
 	}
@@ -966,8 +1192,13 @@ void cryptonight_quad_hash(const void* input, size_t len, void* output, cryptoni
 	for (size_t i = 0; i < 4; i++)
 	{
 		keccak((const uint8_t *)input + len * i, len, ctx[i]->hash_state, 200);
-		if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
-    else         cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+		if(ALGO == cryptonight_heavy){
+      if(BE_MODE) cn_explode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+      else        cn_explode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+    }else{
+      if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+      else        cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+    }
 	}
 
 	CONST_INIT(ctx[0], 0);
@@ -1053,8 +1284,13 @@ void cryptonight_quad_hash(const void* input, size_t len, void* output, cryptoni
 
 	for (size_t i = 0; i < 4; i++)
 	{
-		if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
-    else         cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+		if(ALGO == cryptonight_heavy){
+      if(BE_MODE) cn_implode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+      else        cn_implode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+    }else{
+      if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+      else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+    }
 		keccakf((uint64_t*)ctx[i]->hash_state, 24);
 		extra_hashes[ctx[i]->hash_state[0] & 3](ctx[i]->hash_state, 200, (char*)output + 32 * i);
 	}
@@ -1077,8 +1313,13 @@ void cryptonight_penta_hash(const void* input, size_t len, void* output, crypton
 	for (size_t i = 0; i < 5; i++)
 	{
 		keccak((const uint8_t *)input + len * i, len, ctx[i]->hash_state, 200);
-		if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
-    else         cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+		if(ALGO == cryptonight_heavy){
+      if(BE_MODE) cn_explode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+      else        cn_explode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+    }else{
+      if(BE_MODE) cn_explode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+      else        cn_explode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->hash_state, (__m128i*)ctx[i]->long_state);
+    }
 	}
 
 	CONST_INIT(ctx[0], 0);
@@ -1179,8 +1420,13 @@ void cryptonight_penta_hash(const void* input, size_t len, void* output, crypton
 
 	for (size_t i = 0; i < 5; i++)
 	{
-		if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
-    else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+		if(ALGO == cryptonight_heavy){
+      if(BE_MODE) cn_implode_scratchpad_heavy_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+      else        cn_implode_scratchpad_heavy<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+    }else{
+      if(BE_MODE) cn_implode_scratchpad_be<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+      else        cn_implode_scratchpad<MEM, SOFT_AES, BE_MODE, ALGO>((__m128i*)ctx[i]->long_state, (__m128i*)ctx[i]->hash_state);
+    }
 		keccakf((uint64_t*)ctx[i]->hash_state, 24);
 		extra_hashes[ctx[i]->hash_state[0] & 3](ctx[i]->hash_state, 200, (char*)output + 32 * i);
 	}
