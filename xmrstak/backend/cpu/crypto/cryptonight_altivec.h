@@ -166,8 +166,12 @@ static inline void aes_genkey_be(const __m128i* memory, __m128i* k0, __m128i* k1
 {
 	__m128i xout0, xout2;
 
-	xout0 = v_rev(vec_ld(0,memory));
-	xout2 = v_rev(vec_ld(16,memory));
+	xout0 = vec_ld(0,memory);
+	xout2 = vec_ld(16,memory);
+	
+	xout0 = v_rev(xout0);
+	xout2 = v_rev(xout2);
+	
 	*k0 = xout0;
 	*k1 = xout2;
 

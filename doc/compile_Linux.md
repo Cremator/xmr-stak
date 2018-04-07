@@ -19,7 +19,7 @@ AMD ROCm should compile, but I cannot test it due to lack of hardware.
     # Ubuntu
     sudo apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev
     #install IBM developer tools or compile gcc 6.3.x yourself
-    git clone https://github.com/fireice-uk/xmr-stak.git
+    git clone https://github.com/nioroso-x3/xmr-stak.git
     mkdir xmr-stak/build
     cd xmr-stak/build
     cmake ..
@@ -29,7 +29,7 @@ AMD ROCm should compile, but I cannot test it due to lack of hardware.
     sudo yum install centos-release-scl epel-release
     sudo yum install cmake3 hwloc-devel libmicrohttpd-devel openssl-devel make
     #install IBM developer tools or compile gcc 6.3.x yourself
-    git clone https://github.com/fireice-uk/xmr-stak.git
+    git clone https://github.com/nioroso-x3/xmr-stak.git
     mkdir xmr-stak/build
     cd xmr-stak/build
     cmake3 ..
