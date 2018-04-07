@@ -9,12 +9,7 @@
 #include "xmrstak/backend/cryptonight.hpp"
 #include <string>
 
-#ifdef _WIN32
-#include <windows.h>
-#else
 #include <unistd.h>
-#endif // _WIN32
-
 
 namespace xmrstak
 {
@@ -38,17 +33,6 @@ public:
 		size_t hashMemSizeKB;
 		size_t halfHashMemSizeKB;
 
-		if(::jconf::inst()->IsCurrencyMonero())
-		{
-			hashMemSizeKB = MONERO_MEMORY / 1024u;
-			halfHashMemSizeKB = hashMemSizeKB / 2u;
-		}
-		else
-		{
-			hashMemSizeKB = AEON_MEMORY / 1024u;
-			halfHashMemSizeKB = hashMemSizeKB / 2u;
-		}
-
 		configEditor configTpl{};
 
 		// load the template of the backend config into a char variable
@@ -66,7 +50,7 @@ public:
 				printer::inst()->print_msg(L0, "Autoconf failed: L3 size sanity check failed - %u KB.", L3KB_size);
 
 			conf += std::string("    { \"low_power_mode\" : false, \"be_mode\" : true, \"affine_to_cpu\" : false },\n");
-			printer::inst()->print_msg(L0, "Autoconf FAILED. Create config for a single thread. Please try to add new ones until the hashrate slows down.");
+			printer::inst()->print_msg(L0, "No hwloc library. Created config for a single thread. Please try to add new ones until the hashrate slows down.");
 		}
 		else
 		{
