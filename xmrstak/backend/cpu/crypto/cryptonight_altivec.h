@@ -15,6 +15,10 @@
   */
 #pragma once
 
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
+
 #include "cryptonight.h"
 #include "xmrstak/backend/cryptonight.hpp"
 #include "soft_aes.hpp"
@@ -87,21 +91,21 @@ static inline __m128i v_rev(const __m128i& tmp1)
 
 static inline __m128i _mm_aesenc_si128(__m128i in, __m128i key)
 {
-  return v_rev(__builtin_crypto_vcipher(v_rev(in),v_rev(key)));
+  return v_rev(encrypt(v_rev(in),v_rev(key)));
 }
 
 static inline __m128i _mm_aesenc_si128_beIN(__m128i in, __m128i key)
 {
-  return v_rev(__builtin_crypto_vcipher(in,v_rev(key)));
+  return v_rev(encrypt(in,v_rev(key)));
 }
 
 static inline __m128i _mm_aesenc_si128_beK(__m128i in, __m128i key)
 {
-  return v_rev(__builtin_crypto_vcipher(v_rev(in),key));
+  return v_rev(encrypt(v_rev(in),key));
 }
 static inline __m128i _mm_aesenc_si128_be(__m128i in, __m128i key)
 {
-  return __builtin_crypto_vcipher(in,key);
+  return encrypt(in,key);
 }
 
 
