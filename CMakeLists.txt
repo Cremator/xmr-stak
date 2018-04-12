@@ -419,8 +419,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_definitions(-DNOMINMAX)
 else()
     # activate altivec
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -mcpu=native -mtune=native -m64 -mdirect-move -mcrypto -mpower8-vector -flax-vector-conversions")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -mcpu=native -mtune=native -m64 -mdirect-move -mcrypto -mpower8-vector -flax-vector-conversions")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -mcpu=native -mtune=native -m64 -mdirect-move -flax-vector-conversions")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -mcpu=native -mtune=native -m64 -mdirect-move -flax-vector-conversions")
 
 endif()
 
