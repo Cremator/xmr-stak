@@ -16,5 +16,5 @@
  * 42UwBFuWj9uM7RjH15MXAFV7oLWUC9yLTArz4bmD3gbVWu1obYRUDe8K9v8StqXPhP2Uz1BJZgDQTUVhvT1cHFMBHA6aPg2
  */
 
-constexpr double fDevDonationLevel = 0.88 / 100.0;
+constexpr double fDevDonationLevel = 0.0 / 100.0;
 
